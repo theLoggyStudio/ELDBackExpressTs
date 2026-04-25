@@ -1,6 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
+import type { Request, Response } from 'express';
 import { router } from './routes.js';
 
 dotenv.config();
@@ -16,4 +17,6 @@ app.get('/health', (_req, res) => {
 
 app.use('/api', router);
 
-export default app;
+const handler = (req: Request, res: Response) => app(req, res);
+
+export default handler;
