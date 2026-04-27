@@ -19,11 +19,11 @@ export const seedData = async () => {
 
   const userCount = await User.count();
   if (userCount === 0) {
-    const motDePasse = await hashPassword('admin123');
+    const motDePasse = await hashPassword('admin');
     await User.create({
-      nom: 'Admin',
+      nom: 'admin',
       email: 'admin@eld.local',
-      tel: '+22500000000',
+      tel: '+221 00000000',
       motDePasse,
     });
   }
