@@ -1,7 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import type { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { sequelize } from './config/database.js';
 import './entity/Article.js';
 import './entity/User.js';
@@ -131,6 +131,25 @@ app.use('/api', async (_req, _res, next) => {
 });
 
 app.use('/api', router);
+
+app.use((error: unknown, _req: Request, res: Response, next: NextFunction) => {
+  // eslint-disable-next-line no-console
+  console.error('Unhandled API error:', error);
+
+  if (res.headersSent) {
+    next(error);
+    return;
+  }
+
+  const isProduction = (process.env.NODE_ENV ?? 'development') === 'production';
+  const message =
+    error instanceof Error ? error.message : 'Une erreur interne est survenue';
+
+  res.status(500).json({
+    message: isProduction ? 'Internal Server Error' : message,
+    ...(isProduction ? {} : { stack: error instanceof Error ? error.stack : undefined }),
+  });
+});
 
 const handler = (req: Request, res: Response) => app(req, res);
 
