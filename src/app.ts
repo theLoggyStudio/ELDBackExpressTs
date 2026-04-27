@@ -3,11 +3,31 @@ import dotenv from 'dotenv';
 import express from 'express';
 import type { Request, Response } from 'express';
 import { sequelize } from './config/database.js';
+import './entity/Article.js';
+import './entity/User.js';
 import { router } from './routes.js';
+import { seedData } from './seed.js';
 
 dotenv.config();
 
 export const app = express();
+
+let databaseReadyPromise: Promise<void> | null = null;
+
+export const ensureDatabaseReady = async (): Promise<void> => {
+  if (!databaseReadyPromise) {
+    databaseReadyPromise = (async () => {
+      await sequelize.authenticate();
+      // Sequelize sync cree les tables si elles n'existent pas.
+      await sequelize.sync();
+      await seedData();
+    })().catch((error) => {
+      databaseReadyPromise = null;
+      throw error;
+    });
+  }
+  await databaseReadyPromise;
+};
 
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
@@ -99,6 +119,15 @@ app.get('/status/panel', async (_req, res) => {
     checkedAt: new Date().toISOString(),
     items
   });
+});
+
+app.use('/api', async (_req, _res, next) => {
+  try {
+    await ensureDatabaseReady();
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.use('/api', router);

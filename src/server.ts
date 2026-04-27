@@ -1,15 +1,9 @@
-import { app } from './app.js';
-import { sequelize } from './config/database.js';
-import './entity/Article.js';
-import './entity/User.js';
-import { seedData } from './seed.js';
+import { app, ensureDatabaseReady } from './app.js';
 
 const port = Number(process.env.PORT ?? 4000);
 
 const start = async () => {
-  await sequelize.authenticate();
-  await sequelize.sync();
-  await seedData();
+  await ensureDatabaseReady();
   app.listen(port, () => {
     // eslint-disable-next-line no-console
     console.log(`API démarrée sur http://localhost:${port}`);
