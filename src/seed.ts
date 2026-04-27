@@ -8,13 +8,36 @@ import { hashPassword } from './utils/password.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const ARTICLE_SEED_PATHS = [
+  path.resolve(__dirname, './constants/json/article.json'),
+  path.resolve(__dirname, '../src/constants/json/article.json'),
+  path.resolve(__dirname, '../../ELDVente/src/constants/json/article.json'),
+];
+
+const loadArticleSeed = async (): Promise<Array<Record<string, unknown>>> => {
+  for (const filePath of ARTICLE_SEED_PATHS) {
+    try {
+      const raw = await readFile(filePath, 'utf-8');
+      return JSON.parse(raw) as Array<Record<string, unknown>>;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  }
+
+  // eslint-disable-next-line no-console
+  console.warn('Article seed file not found; skipping initial article seeding.');
+  return [];
+};
+
 export const seedData = async () => {
   const articleCount = await Article.count();
   if (articleCount === 0) {
-    const filePath = path.resolve(__dirname, '../../src/constants/json/article.json');
-    const raw = await readFile(filePath, 'utf-8');
-    const payload = JSON.parse(raw) as Array<Record<string, unknown>>;
-    await Article.bulkCreate(payload as never[]);
+    const payload = await loadArticleSeed();
+    if (payload.length > 0) {
+      await Article.bulkCreate(payload as never[]);
+    }
   }
 
   const userCount = await User.count();
