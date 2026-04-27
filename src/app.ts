@@ -141,13 +141,10 @@ app.use((error: unknown, _req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
-  const isProduction = (process.env.NODE_ENV ?? 'development') === 'production';
-  const message =
-    error instanceof Error ? error.message : 'Une erreur interne est survenue';
-
   res.status(500).json({
-    message: isProduction ? 'Internal Server Error' : message,
-    ...(isProduction ? {} : { stack: error instanceof Error ? error.stack : undefined }),
+    message: error instanceof Error ? error.message : 'Une erreur interne est survenue',
+    stack: error instanceof Error ? error.stack : undefined,
+    error,
   });
 });
 
