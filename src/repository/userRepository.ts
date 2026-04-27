@@ -8,6 +8,7 @@ type UserPayload = {
 };
 
 export const userRepository = {
+  count: () => User.count(),
   findAll: () => User.findAll({ order: [['id', 'DESC']], attributes: { exclude: ['motDePasse'] } }),
   findByPk: (id: number) => User.findByPk(id),
   findByEmail: (email: string) => User.findOne({ where: { email } }),

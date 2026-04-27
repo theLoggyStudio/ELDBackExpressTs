@@ -4,8 +4,23 @@ import { comparePassword, hashPassword } from '../utils/password.js';
 import { signAuthToken } from '../utils/jwt.js';
 import type { AuthRequest } from '../middleware/auth.js';
 
+const ensureDefaultAdminIfNoUser = async () => {
+  const userCount = await userRepository.count();
+  if (userCount > 0) return;
+
+  const motDePasse = await hashPassword('admin');
+  await userRepository.create({
+    nom: 'admin',
+    email: 'admin@eld.local',
+    tel: '+221 00000000',
+    motDePasse,
+  });
+};
+
 export const authController = {
   login: async (req: AuthRequest, res: Response) => {
+    await ensureDefaultAdminIfNoUser();
+
     const { email, motDePasse } = req.body;
     const user = await userRepository.findByEmail(email);
     if (!user) return res.status(401).json({ message: 'Identifiants invalides' });
