@@ -1,14 +1,17 @@
 {
   "name": "eldback",
   "version": "1.0.0",
-  "description": "Backend Express TS pour ELDVente",
+  "description": "Backend Express TS pour EllaDarie (front ELDVente)",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build:plain": "tsc -p tsconfig.json",
     "build:secure": "npm run build:plain && node scripts/secure-build.mjs",
     "build": "npm run build:secure",
-    "start": "node dist/server.js"
+    "sync:articles": "tsx scripts/sync-articles.ts",
+    "sync:articles:replace": "tsx scripts/sync-articles.ts --replace-all",
+    "generate:articles": "python scripts/generate-articles-from-pdf.py",
+    "update:logos": "python scripts/update-article-logos.py && tsx scripts/sync-articles.ts"
   },
   "keywords": [],
   "author": "",

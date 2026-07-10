@@ -5,6 +5,8 @@ export class Article extends Model<InferAttributes<Article>, InferCreationAttrib
   declare id: CreationOptional<number>;
   declare urlImage: string;
   declare nom: string;
+  /** Version ou année du logiciel (ex. 2024, 6.1). */
+  declare version: string;
   declare categorie: string;
   declare URL: string;
   declare urlDrive: string;
@@ -22,6 +24,7 @@ Article.init(
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     urlImage: { type: DataTypes.TEXT, allowNull: false },
     nom: { type: DataTypes.STRING, allowNull: false },
+    version: { type: DataTypes.STRING, allowNull: false, defaultValue: '' },
     categorie: { type: DataTypes.STRING, allowNull: false },
     URL: { type: DataTypes.TEXT, allowNull: false },
     urlDrive: { type: DataTypes.TEXT, allowNull: false },

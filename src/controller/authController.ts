@@ -11,7 +11,7 @@ const ensureDefaultAdminIfNoUser = async () => {
   const motDePasse = await hashPassword('admin');
   await userRepository.create({
     nom: 'admin',
-    email: 'admin@eld.local',
+    email: 'admin',
     tel: '+221 00000000',
     motDePasse,
   });

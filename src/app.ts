@@ -4,6 +4,7 @@ import express from 'express';
 import type { NextFunction, Request, Response } from 'express';
 import { sequelize } from './config/database.js';
 import './entity/Article.js';
+import './entity/Purchase.js';
 import './entity/User.js';
 import { router } from './routes.js';
 import { seedData } from './seed.js';
@@ -19,7 +20,7 @@ export const ensureDatabaseReady = async (): Promise<void> => {
     databaseReadyPromise = (async () => {
       await sequelize.authenticate();
       // Sequelize sync cree les tables si elles n'existent pas.
-      await sequelize.sync();
+      await sequelize.sync({ alter: true });
       await seedData();
     })().catch((error) => {
       databaseReadyPromise = null;
