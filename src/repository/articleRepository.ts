@@ -38,11 +38,22 @@ export const articleRepository = {
   findByPk: (id: number) => Article.findByPk(id),
   findByNomVersion: (nom: string, version: string) =>
     Article.findOne({ where: { nom, version: version ?? '' } }),
-  create: (payload: ArticlePayload) => Article.create(withDefaultAssistanceElements(payload)),
+  create: (payload: ArticlePayload) =>
+    Article.create(
+      withDefaultAssistanceElements({
+        ...payload,
+        version: payload.version ?? '',
+      }),
+    ),
   update: async (id: number, payload: Partial<ArticlePayload>) => {
     const entity = await Article.findByPk(id);
     if (!entity) return null;
-    await entity.update(withDefaultAssistanceElements(payload));
+    await entity.update(
+      withDefaultAssistanceElements({
+        ...payload,
+        ...(payload.version !== undefined ? { version: payload.version ?? '' } : {}),
+      }),
+    );
     return entity;
   },
   delete: async (id: number) => {

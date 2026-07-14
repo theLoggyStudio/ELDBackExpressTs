@@ -18,7 +18,7 @@ export const purchaseController = {
     const buyerEmail = typeof b.buyerEmail === 'string' ? b.buyerEmail.trim() : '';
     const applicationName = typeof b.applicationName === 'string' ? b.applicationName.trim() : '';
 
-    if (!buyerEmail || !emailPattern.test(buyerEmail)) {
+    if (buyerEmail && !emailPattern.test(buyerEmail)) {
       return res.status(400).json({ message: 'E-mail acheteur invalide' });
     }
     if (!applicationName) {
@@ -27,7 +27,7 @@ export const purchaseController = {
 
     const created = await purchaseRepository.create({
       receiptId: randomUUID(),
-      buyerEmail,
+      buyerEmail: buyerEmail || '—',
       applicationName: applicationName.slice(0, 500),
     });
     return res.status(201).json(created);
