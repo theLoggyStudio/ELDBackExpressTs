@@ -1,5 +1,7 @@
 import type { Request, Response } from 'express';
 import { randomUUID } from 'node:crypto';
+import { articleRepository } from '../repository/articleRepository.js';
+import { downloadTokenRepository } from '../repository/downloadTokenRepository.js';
 import { purchaseRepository } from '../repository/purchaseRepository.js';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,6 +32,18 @@ export const purchaseController = {
       buyerEmail: buyerEmail || '—',
       applicationName: applicationName.slice(0, 500),
     });
-    return res.status(201).json(created);
+
+    // Jeton de téléchargement à usage unique : l'URL Drive n'est jamais renvoyée au front.
+    let downloadToken: string | null = null;
+    const articleId = Number(b.articleId);
+    if (Number.isInteger(articleId) && articleId > 0) {
+      const article = await articleRepository.findByPk(articleId);
+      if (article?.urlDrive?.trim()) {
+        const tokenRow = await downloadTokenRepository.createForArticle(articleId);
+        downloadToken = tokenRow.token;
+      }
+    }
+
+    return res.status(201).json({ ...created.toJSON(), downloadToken });
   },
 };

@@ -32,7 +32,7 @@ Article.init(
     description: { type: DataTypes.TEXT, allowNull: false },
     descriptionAvecAssistace: { type: DataTypes.TEXT, allowNull: false },
     prixAvecAssistace: { type: DataTypes.INTEGER, allowNull: false },
-    tel: { type: DataTypes.STRING, allowNull: false },
+    tel: { type: DataTypes.STRING, allowNull: false, defaultValue: '+221708984443' },
     elementsSansAssistance: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
     elementsAvecAssistance: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
   },

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { articleController } from './controller/articleController.js';
 import { authController } from './controller/authController.js';
+import { downloadController } from './controller/downloadController.js';
 import { paymentController } from './controller/paymentController.js';
 import { purchaseController } from './controller/purchaseController.js';
 import { userController } from './controller/userController.js';
@@ -17,7 +18,10 @@ router.post('/payment/checkout', paymentController.checkout);
 router.get('/purchases', authMiddleware, purchaseController.getAll);
 router.post('/purchases', purchaseController.create);
 
+router.get('/downloads/:token', downloadController.redeem);
+
 router.get('/articles', articleController.getAll);
+router.get('/articles/:id', articleController.getOne);
 router.post('/articles', authMiddleware, articleController.create);
 router.put('/articles/:id', authMiddleware, articleController.update);
 router.delete('/articles/:id', authMiddleware, articleController.remove);

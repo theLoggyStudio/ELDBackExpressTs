@@ -73,11 +73,12 @@ export const seedData = async () => {
     await syncArticles(payload);
   }
 
-  // Harmonise les articles deja en base avec les formules standards demandees.
+  // Harmonise les articles deja en base avec les formules / téléphone standards demandés.
   await Article.update(
     {
       elementsSansAssistance: [...ELEMENTS_SANS_ASSISTANCE_DEFAUT],
       elementsAvecAssistance: [...ELEMENTS_AVEC_ASSISTANCE_DEFAUT],
+      tel: '+221708984443',
     },
     { where: {} }
   );

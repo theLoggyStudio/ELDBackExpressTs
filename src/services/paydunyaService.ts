@@ -9,7 +9,10 @@ const normalizeCode = (raw: unknown): string => {
 
 const messageForCode = (code: string, text: string | undefined): string | undefined => {
   if (code === '1001') {
-    return 'Clés PayDunya invalides : vérifiez les clés publique/privée et le token (même application).';
+    const detail = text?.trim();
+    return detail
+      ? `Clés PayDunya invalides : ${detail}`
+      : 'Clés PayDunya invalides : master key / clé privée / token (même application, mode test ou production).';
   }
   return text;
 };
@@ -21,11 +24,12 @@ export const createPaydunyaCheckoutInvoice = async (params: {
   cancelUrl: string;
 }): Promise<CreateInvoiceResult> => {
   const masterKey = getPaydunyaMasterKey();
-  const { publicKey, privateKey, token, url } = getPaydunyaKeys();
+  const { privateKey, token, url } = getPaydunyaKeys();
   const mode = getPaydunyaMode();
 
-  if (!masterKey || !publicKey || !privateKey || !token) {
-    return { ok: false, message: `Clés PayDunya manquantes (master/publique/privée/token, mode: ${mode}).` };
+  // Docs HTTP/JSON : master + private + token (pas la clé publique).
+  if (!masterKey || !privateKey || !token) {
+    return { ok: false, message: `Clés PayDunya manquantes (master/privée/token, mode: ${mode}).` };
   }
   if (!url) {
     return { ok: false, message: 'URL API PayDunya manquante.' };
@@ -50,7 +54,6 @@ export const createPaydunyaCheckoutInvoice = async (params: {
     headers: {
       'Content-Type': 'application/json',
       'PAYDUNYA-MASTER-KEY': masterKey,
-      'PAYDUNYA-PUBLIC-KEY': publicKey,
       'PAYDUNYA-PRIVATE-KEY': privateKey,
       'PAYDUNYA-TOKEN': token,
     },
