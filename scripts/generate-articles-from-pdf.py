@@ -212,10 +212,7 @@ IMAGE_URL: dict[str, str] = {
     "office + ms project": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https%3A%2F%2Fwww.microsoft.com%2Fmicrosoft-365&size=256",
 }
 
-PRIX: dict[str, int] = {
-    "covadis": 10000,
-    "lumion pro": 5000,
-}
+PRIX: dict[str, int] = {}
 
 
 def norm_key(nom: str) -> str:
@@ -259,10 +256,8 @@ def build_article(raw: dict[str, str]) -> dict:
     nom = NOM_CANON.get(key, raw["nom"].strip())
     version = raw["version"].strip()
     version_label = f" {version}" if version else ""
-    prix = PRIX.get(key, 5000)
-    prix_assist = prix + 5000
-    if key == "covadis":
-        prix_assist = 15000
+    prix = PRIX.get(key, 4000)
+    prix_assist = 6000
     image = IMAGE_URL.get(key, ELLADARIE_DEFAULT_LOGO)
     desc = f"Licence {nom}{version_label} : livraison numérique."
     return {

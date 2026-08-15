@@ -3,7 +3,10 @@ import { getDohoneCountryCodes } from '../config/dohoneConfig.js';
 import { getPaydunyaCountryCodes } from '../config/paydunyaConfig.js';
 import { quoteForCountry } from '../services/currencyService.js';
 import { startDohonePayment } from '../services/dohoneService.js';
-import { createPaydunyaCheckoutInvoice } from '../services/paydunyaService.js';
+import {
+  confirmPaydunyaCheckoutInvoice,
+  createPaydunyaCheckoutInvoice,
+} from '../services/paydunyaService.js';
 
 const parseBody = (body: unknown): Record<string, unknown> =>
   body && typeof body === 'object' && !Array.isArray(body) ? (body as Record<string, unknown>) : {};
@@ -99,6 +102,29 @@ export const paymentController = {
 
     return res.status(400).json({
       message: 'Aucun fournisseur de paiement pour ce pays. Ajoutez le pays à DOHONE_COUNTRY_CODES ou PAYDUNYA_COUNTRY_CODES.',
+    });
+  },
+
+  /** Confirme une facture PayDunya (token renvoyé sur return_url) et renvoie l’e-mail client. */
+  confirmPaydunya: async (req: Request, res: Response) => {
+    const token =
+      (typeof req.query.token === 'string' ? req.query.token : undefined)?.trim() ||
+      (asString(parseBody(req.body).token) ?? '').trim();
+
+    if (!token) {
+      return res.status(400).json({ message: 'token de facture PayDunya requis' });
+    }
+
+    const result = await confirmPaydunyaCheckoutInvoice(token);
+    if (!result.ok) {
+      return res.status(502).json({ message: result.message });
+    }
+
+    return res.json({
+      status: result.status,
+      customerEmail: result.customerEmail,
+      customerName: result.customerName,
+      customerPhone: result.customerPhone,
     });
   },
 };

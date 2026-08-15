@@ -14,6 +14,8 @@ router.post('/auth/change-password', authMiddleware, authController.changePasswo
 
 router.post('/payment/quote', paymentController.quote);
 router.post('/payment/checkout', paymentController.checkout);
+router.get('/payment/paydunya/confirm', paymentController.confirmPaydunya);
+router.post('/payment/paydunya/confirm', paymentController.confirmPaydunya);
 
 router.get('/purchases', authMiddleware, purchaseController.getAll);
 router.post('/purchases', purchaseController.create);
