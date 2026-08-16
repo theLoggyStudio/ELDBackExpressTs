@@ -191,25 +191,66 @@ SITE_URL: dict[str, str] = {
     "vray": "https://www.chaos.com/vray",
 }
 
+WM_COMMONS = "https://upload.wikimedia.org/wikipedia/commons"
+WM_EN = "https://upload.wikimedia.org/wikipedia/en"
+
+
+def _favicon(domain: str) -> str:
+    return (
+        "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON"
+        f"&fallback_opts=TYPE,SIZE,URL&url=https://{domain}&size=128"
+    )
+
+
 IMAGE_URL: dict[str, str] = {
-    "archicad": "https://i.pinimg.com/736x/78/79/1f/78791f95f5a7fff8fafd132e3b3adc8c.jpg",
-    "autocad": "https://i.pinimg.com/originals/58/6b/be/586bbe06de2d9896b8ef4dda71caa13c.png",
-    "auto.elec": "https://rochasoftwares.com/wp-content/uploads/2023/04/autocad-electrical-2024.png",
-    "revit": "https://th.bing.com/th/id/OIP.q_gCvE7EFU2Gp8OZNiEfQwHaHa?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
-    "sketchup": "https://i.pinimg.com/1200x/0d/9c/14/0d9c147ce693bb180b9c7f0ed378516e.jpg",
-    "graitec": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.graitec.com/&size=256",
-    "robot ddc/mil": "https://tse3.mm.bing.net/th/id/OIP.ptyDuSX49cOEjauswiqM3QAAAA?w=300&h=225&rs=1&pid=ImgDetMain&o=7&rm=3",
-    "rsa": "https://damassets.autodesk.net/content/dam/autodesk/www/products/responsive-imagery/responsive-badges-free-trial/2017/robot-structural-analysis-professional-badge-150x150.png",
-    "dialux": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Dx_Logo.svg",
-    "covadis": "https://th.bing.com/th/id/OIP.VwFXGi5mBquqySoHk-LWAAHaFd?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
-    "lumion pro": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://lumion.com/&size=256",
-    "enscape": "https://upload.wikimedia.org/wikipedia/commons/1/18/Enscape-logo-color-black-rgb.svg",
-    "cypecad": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https%3A%2F%2Fwww.cype.com&size=256",
-    "digsilent powerfactory": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https%3A%2F%2Fwww.digsilent.de&size=256",
-    "eplan electric p8": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https%3A%2F%2Fwww.eplan.de&size=256",
-    "etap": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https%3A%2F%2Fetap.com&size=256",
-    "office + msproject": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https%3A%2F%2Fwww.microsoft.com%2Fmicrosoft-365&size=256",
-    "office + ms project": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https%3A%2F%2Fwww.microsoft.com%2Fmicrosoft-365&size=256",
+    # Logos officiels via Wikimedia
+    "archicad": f"{WM_COMMONS}/3/32/Graphisoft_Archicad_Logo.svg",
+    "autocad": f"{WM_COMMONS}/0/08/AutoCad_logo.svg",
+    "auto.elec": f"{WM_COMMONS}/d/db/Autodesk_AutoCAD_Logo.svg",
+    "mechanical": f"{WM_COMMONS}/d/db/Autodesk_AutoCAD_Logo.svg",
+    "auto sd": f"{WM_COMMONS}/d/db/Autodesk_AutoCAD_Logo.svg",
+    "3ds max": f"{WM_COMMONS}/b/ba/Autodesk_3ds_Max_Logo.svg",
+    "revit": f"{WM_COMMONS}/c/c6/Autodesk_Revit_Logo.svg",
+    "allplan": f"{WM_COMMONS}/0/0a/Allplan_Logo.png",
+    "cadwox": f"{WM_COMMONS}/a/ae/Cadwork_logo.jpg",
+    "cinema 4d": f"{WM_COMMONS}/0/04/Cinema_4D_Logo_2026.svg",
+    "csi.bridge": f"{WM_EN}/8/83/Fair_use_image_of_CSI_circular_logo.PNG",
+    "eplan electric p8": f"{WM_COMMONS}/7/76/Eplan-logo.svg",
+    "office + msproject": f"{WM_EN}/3/35/Microsoft_Office_Logo_%282019-present%29.svg",
+    "office + ms project": f"{WM_EN}/3/35/Microsoft_Office_Logo_%282019-present%29.svg",
+    "pdf creator": f"{WM_COMMONS}/0/08/PDFCreator_logo.svg",
+    "rhino": f"{WM_EN}/d/d0/Rhinoceros3d-logo.png",
+    "sketchup": f"{WM_COMMONS}/b/ba/Brand_Wordmark_for_SketchUp.png",
+    "solidworks": f"{WM_COMMONS}/b/bf/SOLIDWORKS_Logo.svg",
+    "tekla struc": f"{WM_COMMONS}/8/81/Tekla_Structures_Logo_2026.svg",
+    "vray": f"{WM_COMMONS}/5/55/V-Ray_Logo_1.jpg",
+    "dialux": f"{WM_COMMONS}/a/a2/Dx_Logo.svg",
+    "enscape": f"{WM_COMMONS}/1/18/Enscape-logo-color-black-rgb.svg",
+    # Icônes officielles des sites éditeurs
+    "lumion pro": _favicon("lumion.com"),
+    "twinmotion": _favicon("twinmotion.com"),
+    "global mapper": _favicon("bluemarblegeo.com"),
+    "graitec": _favicon("graitec.com"),
+    "pvsyst": _favicon("pvsyst.com"),
+    "etap": _favicon("etap.com"),
+    "digsilent powerfactory": _favicon("digsilent.de"),
+    "artlantis": _favicon("artlantis.com"),
+    "arlantis": _favicon("artlantis.com"),
+    "homer pro": _favicon("homerenergy.com"),
+    "pronest": _favicon("hypertherm.com"),
+    "cype": _favicon("cype.com"),
+    "cypecad": _favicon("cype.com"),
+    "covadis": _favicon("geo-media.com"),
+    "mensura": _favicon("geomensura.com"),
+    "autofluid": _favicon("autofluid.fr"),
+    "schemaplic": _favicon("schemaplic.fr"),
+    "alize lpc": _favicon("alize-lpc.com"),
+    "qoter plan": _favicon("quoterplan.com"),
+    # Produits Autodesk sans logo dédié → logo EllaDarie (chaîne vide)
+    "robot ddc/mil": "",
+    "rsa": "",
+    "cbs/rsa": "",
+    "civil 3d": "",
 }
 
 PRIX: dict[str, int] = {}
