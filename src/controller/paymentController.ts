@@ -117,7 +117,11 @@ export const paymentController = {
 
     const result = await confirmPaydunyaCheckoutInvoice(token);
     if (!result.ok) {
-      return res.status(502).json({ message: result.message });
+      // 402 : facture connue mais non payée (pending / cancelled / expiré).
+      const unpaid =
+        /attente|annul|expir|non confirm/iu.test(result.message) ||
+        /pending|cancelled|canceled/iu.test(result.message);
+      return res.status(unpaid ? 402 : 502).json({ message: result.message });
     }
 
     return res.json({

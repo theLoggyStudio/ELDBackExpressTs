@@ -147,10 +147,27 @@ export const confirmPaydunyaCheckoutInvoice = async (
     return { ok: false, message: hint || data.description || `Erreur PayDunya (code ${code}).` };
   }
 
+  // PayDunya : completed | pending | cancelled — seul « completed » autorise la livraison.
+  const status = String(data.status ?? '').trim().toLowerCase();
+  if (status !== 'completed') {
+    if (status === 'pending') {
+      return { ok: false, message: 'Paiement PayDunya encore en attente. Réessayez après confirmation.' };
+    }
+    if (status === 'cancelled' || status === 'canceled') {
+      return { ok: false, message: 'Paiement PayDunya annulé ou expiré.' };
+    }
+    return {
+      ok: false,
+      message: status
+        ? `Paiement PayDunya non confirmé (statut : ${status}).`
+        : 'Paiement PayDunya non confirmé.',
+    };
+  }
+
   const customer = data.customer ?? {};
   return {
     ok: true,
-    status: String(data.status ?? data.response_text ?? '').trim().toLowerCase(),
+    status,
     customerEmail: String(customer.email ?? '').trim(),
     customerName: String(customer.name ?? '').trim(),
     customerPhone: String(customer.phone ?? '').trim(),
